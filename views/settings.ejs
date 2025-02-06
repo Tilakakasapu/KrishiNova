@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Settings 📐</title>
+</head>
+<body>
+    <nav class="bg-green-600 p-4 mb-6">
+        <div class="container mx-auto">
+            <a href="/" class="text-white font-bold hover:text-green-200 flex items-center w-fit">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <section id="settings" class="py-12">
+  <div class="container mx-auto">
+    <h2 class="text-3xl font-bold text-green-800 text-center mb-8">Settings</h2>
+    <form id="settings-form" class="bg-white p-6 rounded-lg shadow-lg">
+      <div class="mb-4">
+        <label for="crop-type" class="block text-gray-700">Crop Type:</label>
+        <input type="text" id="crop-type" name="crop-type" required class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Enter crop type">
+      </div>
+
+      <div class="mb-4">
+        <label for="state" class="block text-gray-700">State:</label>
+        <select id="state" name="state" required class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+          <option value="">Select a state</option>
+          <option value="Andhra Pradesh">Andhra Pradesh</option>
+          <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+          <option value="Assam">Assam</option>
+          <option value="Bihar">Bihar</option>
+          <option value="Chhattisgarh">Chhattisgarh</option>
+          <option value="Goa">Goa</option>
+          <option value="Gujarat">Gujarat</option>
+          <option value="Haryana">Haryana</option>
+          <option value="Himachal Pradesh">Himachal Pradesh</option>
+          <option value="Jharkhand">Jharkhand</option>
+          <option value="Karnataka">Karnataka</option>
+          <option value="Kerala">Kerala</option>
+          <option value="Madhya Pradesh">Madhya Pradesh</option>
+          <option value="Maharashtra">Maharashtra</option>
+          <option value="Manipur">Manipur</option>
+          <option value="Meghalaya">Meghalaya</option>
+          <option value="Mizoram">Mizoram</option>
+          <option value="Nagaland">Nagaland</option>
+          <option value="Odisha">Odisha</option>
+          <option value="Punjab">Punjab</option>
+          <option value="Rajasthan">Rajasthan</option>
+          <option value="Sikkim">Sikkim</option>
+          <option value="Tamil Nadu">Tamil Nadu</option>
+          <option value="Telangana">Telangana</option>
+          <option value="Tripura">Tripura</option>
+          <option value="Uttar Pradesh">Uttar Pradesh</option>
+          <option value="Uttarakhand">Uttarakhand</option>
+          <option value="West Bengal">West Bengal</option>
+          <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+          <option value="Chandigarh">Chandigarh</option>
+          <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+          <option value="Delhi">Delhi</option>
+          <option value="Lakshadweep">Lakshadweep</option>
+          <option value="Puducherry">Puducherry</option>
+        </select>
+      </div>
+
+      <div class="mb-4">
+        <label for="district" class="block text-gray-700">District:</label>
+        <input type="text" id="district" name="district" required class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Enter district">
+      </div>
+
+      <div class="mb-4">
+        <label for="place" class="block text-gray-700">Place:</label>
+        <input type="text" id="place" name="place" required class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Enter place">
+      </div>
+
+      <div class="mb-4">
+        <label for="crop-image" class="block text-gray-700">Crop Stage:</label>
+
+
+        <input type="text" id="crop-image" name="crop-image" accept="image/*" class="mt-1 block w-full border border-gray-300 rounded-md p-2" placeholder="Enter Crop stage">
+      </div>
+
+      <button type="submit" class="w-full bg-green-600 text-white font-bold py-2 rounded-md hover:bg-green-700">Save Settings</button>
+    </form>
+    <div id="message" class="mt-4 text-center text-green-600"></div>
+  </div>
+
+  <div id="popup" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-xl border-2 border-green-500 z-50">
+    <div class="text-center">
+        <svg class="mx-auto h-12 w-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <h3 class="mt-2 text-lg font-semibold text-gray-900">Settings Saved!</h3>
+        <p class="mt-2 text-sm text-gray-500">Your settings have been successfully updated.</p>
+        <button onclick="closePopup()" class="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors">
+            Close
+        </button>
+    </div>
+  </div>
+
+  <div id="overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-40"></div>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+  <script type="module">
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js";
+
+    // const auth = getAuth();
+    // const db = getFirestore();
+    // const storage = getStorage();
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById('settings-form').addEventListener('submit', async function(event) {
+          event.preventDefault();
+
+          const cropType = document.getElementById('crop-type').value;
+          const state = document.getElementById('state').value;
+          const district = document.getElementById('district').value;
+          const place = document.getElementById('place').value;
+          const cropImage = document.getElementById('crop-image').files[0];
+
+          try {
+            let imageUrl = null;
+            if (cropImage) {
+              const storageRef = ref(storage, `crop-images/${user.email}/${cropImage.name}`);
+              await uploadBytes(storageRef, cropImage);
+              imageUrl = await getDownloadURL(storageRef);
+            }
+
+            const userRef = doc(db, "users", user.email);
+            await setDoc(userRef , {
+              cropType: cropType,
+              state: state,
+              district: district,
+              place: place,
+              cropImageURL: imageUrl || (await getDoc(userRef)).data().cropImageURL
+            }, { merge: true });
+
+            document.getElementById('message').innerText = 'Settings saved successfully!';
+            showPopup();
+          } catch (error) {
+            console.error("Error saving settings: ", error);
+            document.getElementById('message').innerText = 'Error saving settings. Please try again.';
+          }
+        });
+
+        const stateSelect = new Choices('#state', {
+          searchEnabled: true,
+          placeholder: true,
+          placeholderValue: 'Select a state',
+          removeItemButton: true,
+        });
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+
+    function showPopup() {
+        document.getElementById('popup').classList.remove('hidden');
+        document.getElementById('overlay').classList.remove('hidden');
+    }
+
+    function closePopup() {
+        document.getElementById('popup').classList.add('hidden');
+        document.getElementById('overlay').classList.add('hidden');
+    }
+
+    // Close popup when clicking outside
+    document.getElementById('overlay').addEventListener('click', closePopup);
+
+    // Close popup with Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closePopup();
+        }
+    });
+  </script>
+</section>
+</body>
+</html>

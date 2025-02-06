@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Agriculture Monitoring</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .card:hover {
+      transform: translateY(-10px);
+      transition: transform 0.3s ease;
+    }
+  </style>
+</head>
+<nav class="bg-white shadow-lg p-4">
+  <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-green-600">KrishiNova</h1>
+      <div class="space-x-4">
+          <a href="/" class="text-gray-700 hover:text-green-600">Home</a>
+          <a href="#weather" class="text-gray-700 hover:text-green-600">Weather</a>
+          <a href="#tank" class="text-gray-700 hover:text-green-600">Tank Levels</a>
+          <a href="#crop" class="text-gray-700 hover:text-green-600">Crop Data</a>
+        
+          <% if (isAuthenticated) { %>
+            <a href="/logout">Sign Out</a>
+            <a href="/settings">Settings</a>
+          <% } else { %>
+            <a href="/login">Login</a>
+            <a href="/signup">Sign Up</a>
+            <!-- Add a prompt for settings -->
+            
+              <a href="/login" class="settings-prompt">
+                Settings (Please sign in first)
+              </a>
+            
+          <% } %>
+      </div>
+  </div>
+</nav>
+
+  <!-- Hero Section -->
+  <section class="hero bg-green-50 py-20">
+    <div class="container mx-auto text-center">
+      <h1 class="text-5xl font-bold text-green-800">Welcome to KrishiNova</h1>
+      <p class="mt-4 text-gray-600">Your smart solution for agriculture monitoring.</p>
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <a href="#weather" class="card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl">
+          <h2 class="text-xl font-bold text-green-700">Weather Information</h2>
+        </a>
+        <a href="#tank" class="card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl">
+          <h2 class="text-xl font-bold text-green-700">Tank Water Levels</h2>
+        </a>
+        <a href="#crop" class="card bg-white p-6 rounded-lg shadow-lg hover:shadow-xl">
+          <h2 class="text-xl font-bold text-green-700">Real-Time Crop Data</h2>
+        </a>
+      </div>
+    </div>
+  </section>
+  <section id="weather" class="py-12">
+    <div class="container mx-auto">
+      <h2 class="text-3xl font-bold text-green-800 text-center mb-8">Weather Information</h2>
+      <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Current Weather -->
+        <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <h3 class="text-xl font-bold text-green-700 mb-4">Current Weather</h3>
+          <div id="current-weather" class="mt-4 text-center">
+            <!-- Data will be populated by JavaScript -->
+          </div>
+        </div>
+        <!-- 7-Day Forecast -->
+        <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <h3 class="text-xl font-bold text-green-700 mb-4">7-Day Forecast</h3>
+          <canvas id="weather-chart" class="mt-4"></canvas>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Weather Icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Fetch weather data from OpenWeatherMap API
+    const apiKey = '200ac25d3d2ba7f722f0f383c245ba15';
+    const city = 'Nellore';
+    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`)
+      .then(response => response.json())
+      .then(data => {
+        const currentWeather = document.getElementById('current-weather');
+        const weatherIcon = getWeatherIcon(data.weather[0].main);
+        currentWeather.innerHTML = `
+          <div class="text-6xl mb-4">${weatherIcon}</div>
+          <p class="text-xl font-bold">${data.main.temp}°C</p>
+          <p class="text-gray-600">Humidity: ${data.main.humidity}%</p>
+          <p class="text-gray-600">Wind Speed: ${data.wind.speed} m/s</p>
+          <p class="text-gray-600">${data.weather[0].description}</p>
+        `;
+        updateBackground(data.weather[0].main); // Update background based on weather
+      });
+  
+    // Get Weather Icon
+    function getWeatherIcon(weather) {
+      switch (weather.toLowerCase()) {
+        case 'clear':
+          return '<i class="fas fa-sun text-yellow-400"></i>';
+        case 'clouds':
+          return '<i class="fas fa-cloud text-gray-400"></i>';
+        case 'rain':
+          return '<i class="fas fa-cloud-rain text-blue-400"></i>';
+        case 'snow':
+          return '<i class="fas fa-snowflake text-blue-200"></i>';
+        case 'thunderstorm':
+          return '<i class="fas fa-bolt text-yellow-600"></i>';
+        default:
+          return '<i class="fas fa-cloud-sun text-gray-400"></i>';
+      }
+    }
+  
+    // Update Background Based on Weather
+    function updateBackground(weather) {
+      const section = document.getElementById('weather');
+      switch (weather.toLowerCase()) {
+        case 'clear':
+          section.style.background = 'linear-gradient(135deg, #f6d365 0%, #fda085 100%)';
+          break;
+        case 'clouds':
+          section.style.background = 'linear-gradient(135deg, #bdc3c7 0%, #2c3e50 100%)';
+          break;
+        case 'rain':
+          section.style.background = 'linear-gradient(135deg, #74ebd5 0%, #9face6 100%)';
+          break;
+        case 'snow':
+          section.style.background = 'linear-gradient(135deg, #e6e9f0 0%, #eef1f5 100%)';
+          break;
+        case 'thunderstorm':
+          section.style.background = 'linear-gradient(135deg, #2c3e50 0%, #4ca1af 100%)';
+          break;
+        default:
+          section.style.background = 'linear-gradient(135deg, #f3e7e9 0%, #e3eeff 100%)';
+      }
+    }
+  
+    // Example Chart.js for 7-day forecast
+    const ctx = document.getElementById('weather-chart').getContext('2d');
+    const weatherChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+        datasets: [{
+          label: 'Temperature (°C)',
+          data: [22, 24, 23, 25, 26, 24, 23],
+          borderColor: '#4CAF50',
+          fill: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+          }
+        }
+      }
+    });
+  </script>
+  
+  <style>
+    /* Smooth Background Transition */
+    #weather {
+      transition: background 0.5s ease;
+    }
+  
+    /* Card Hover Effect */
+    .hover\:shadow-xl:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+  </style>
+ <section id="tank" class="py-12">
+  <div class="container mx-auto">
+    <h2 class="text-3xl font-bold text-green-800 text-center">Tank Water Levels</h2>
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Real-Time Water Level -->
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-bold text-green-700">Current Water Level</h3>
+        <div class="mt-4 flex justify-center">
+          <!-- Water Tank Container -->
+          <div class="water-tank">
+            <div id="water-fill" class="water-fill" style="height: 0%;"></div>
+          </div>
+        </div>
+        <p class="mt-4 text-center text-gray-600">Current Level: <span id="water-level" class="font-bold">0%</span></p>
+      </div>
+      <!-- Historical Trends -->
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-bold text-green-700">Historical Trends</h3>
+        <canvas id="water-chart" class="mt-4"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Water Tank Styles */
+  .water-tank {
+    width: 120px;
+    height: 200px;
+    background: #e0e0e0;
+    border: 4px solid #bdbdbd;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .water-fill {
+    width: 100%;
+    height: 0%; /* Initial height, will be updated dynamically */
+    background: #2196F3;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transition: height 0.5s ease;
+    overflow: hidden;
+  }
+
+  /* Wave effect on water surface */
+  .water-fill::before {
+    content: '';
+    position: absolute;
+    top: -10px; /* Adjust to hide part of the wave */
+    left: 0;
+    width: 200%;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    opacity: 0.8;
+    animation: wave 2s infinite linear;
+  }
+
+  /* Wave Animation */
+  @keyframes wave {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+</style>
+
+<script>
+  // ThingSpeak API details
+  // const channelID = 'YOUR_CHANNEL_ID'; // Replace with your ThingSpeak channel ID
+  // const apiKey = 'YOUR_API_KEY'; // Replace with your ThingSpeak API key
+  const fieldNumber = 6; // Field number for water level
+
+  // Function to fetch data from ThingSpeak
+  async function fetchWaterLevel() {
+    const url = `https://api.thingspeak.com/channels/${'2827118'}/fields/${fieldNumber}/last.json?api_key=${'BC77M4DSM5O21VYY'}`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      const waterLevel = data.field6; // Get the water level from Field 6
+
+      // Update the water tank and text
+      document.getElementById('water-fill').style.height = `${waterLevel}%`;
+      document.getElementById('water-level').textContent = `${waterLevel}%`;
+    } catch (error) {
+      console.error('Error fetching water level:', error);
+    }
+  }
+
+  // Fetch water level every 5 seconds (or adjust as needed)
+  setInterval(fetchWaterLevel, 5000);
+
+  // Initial fetch
+  fetchWaterLevel();
+
+  // Example Chart.js for historical water levels
+  const waterCtx = document.getElementById('water-chart').getContext('2d');
+  const waterChart = new Chart(waterCtx, {
+    type: 'line',
+    data: {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      datasets: [{
+        label: 'Water Level (%)',
+        data: [80, 75, 70, 65, 60, 55],
+        borderColor: '#2196F3',
+        fill: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+        }
+      }
+    }
+  });
+</script>
+<section id="crop" class="py-12">
+  <div class="container mx-auto">
+    <h2 class="text-3xl font-bold text-green-800 text-center">Real-Time Crop Data</h2>
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6">
+      <!-- Soil Moisture 1 -->
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-bold text-green-700">Soil Moisture 1</h3>
+        <canvas id="moisture1-chart" class="mt-4"></canvas>
+      </div>
+      <!-- Soil Moisture 2 -->
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-bold text-green-700">Soil Moisture 2</h3>
+        <canvas id="moisture2-chart" class="mt-4"></canvas>
+      </div>
+      <!-- Temperature -->
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-bold text-green-700">Temperature</h3>
+        <canvas id="temp-chart" class="mt-4"></canvas>
+      </div>
+      <!-- Humidity -->
+      <div class="bg-white p-6 rounded-lg shadow-lg">
+        <h3 class="text-xl font-bold text-green-700">Humidity</h3>
+        <canvas id="humidity-chart" class="mt-4"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const channelID = '2832043';  // Replace with your ThingSpeak Channel ID
+  const readAPIKey = '7ZVN6QP10S29ZFBE';  // If your channel is private, add the Read API Key here
+
+  // Initialize charts with empty data
+  const moisture1Ctx = document.getElementById('moisture1-chart').getContext('2d');
+  const moisture2Ctx = document.getElementById('moisture2-chart').getContext('2d');
+  const tempCtx = document.getElementById('temp-chart').getContext('2d');
+  const humidityCtx = document.getElementById('humidity-chart').getContext('2d');
+
+  // Initial empty datasets
+  const moisture1Chart = new Chart(moisture1Ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Moisture 1 (%)',
+        data: [],
+        borderColor: '#FF6384',
+        fill: false,
+      }]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+  });
+
+  const moisture2Chart = new Chart(moisture2Ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Moisture 2 (%)',
+        data: [],
+        borderColor: '#4BC0C0',
+        fill: false,
+      }]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+  });
+
+  const tempChart = new Chart(tempCtx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Temperature (°C)',
+        data: [],
+        borderColor: '#36A2EB',
+        fill: false,
+      }]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+  });
+
+  const humidityChart = new Chart(humidityCtx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Humidity (%)',
+        data: [],
+        borderColor: '#FFCE56',
+        fill: false,
+      }]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+  });
+
+  // Fetch data from ThingSpeak and update charts
+  async function fetchThingSpeakData() {
+    const channelID = "2832043"; // Replace with your actual channel ID
+    const apiKey = "7ZVN6QP10S29ZFBE"; // If the channel is private, add your Read API Key
+    const url = `https://api.thingspeak.com/channels/${channelID}/feeds.json?results=6${apiKey ? "&api_key=" + apiKey : ""}`;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (!data.feeds || data.feeds.length === 0) {
+        throw new Error("No data found in ThingSpeak response.");
+      }
+
+      const feeds = data.feeds;
+
+      // Extract labels and data
+      const labels = feeds.map(feed => new Date(feed.created_at).toLocaleTimeString());
+      const moisture1Data = feeds.map(feed => feed.field1 ? parseFloat(feed.field1) : null); // Soil Sensor 1
+      const moisture2Data = feeds.map(feed => feed.field2 ? parseFloat(feed.field2) : null); // Soil Sensor 2
+      const tempData = feeds.map(feed => feed.field3 ? parseFloat(feed.field3) : null); // Temperature
+      const humidityData = feeds.map(feed => feed.field4 ? parseFloat(feed.field4) : null); // Humidity
+
+      // Ensure no NaN values break the chart updates
+      updateChartData(moisture1Chart, labels, moisture1Data.filter(v => v !== null));
+      updateChartData(moisture2Chart, labels, moisture2Data.filter(v => v !== null));
+      updateChartData(tempChart, labels, tempData.filter(v => v !== null));
+      updateChartData(humidityChart, labels, humidityData.filter(v => v !== null));
+
+    } catch (error) {
+      console.error('Error fetching data from ThingSpeak:', error);
+    }
+  }
+
+  // Function to update chart data
+  function updateChartData(chart, labels, data) {
+    chart.data.labels = labels;
+    chart.data.datasets[0].data = data;
+    chart.update();  // Refresh chart with new data
+  }
+
+  // Fetch data initially and set interval for updates
+  fetchThingSpeakData();
+  setInterval(fetchThingSpeakData, 20000);  // Update every 20 seconds
+</script>
+
+
+  <!-- Footer -->
+  <footer class="bg-white shadow-lg mt-8 p-4">
+    <div class="container mx-auto text-center text-gray-600">
+      <p>&copy; 2025 KrishiNova. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
